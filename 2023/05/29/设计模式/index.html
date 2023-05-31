@@ -16,16 +16,17 @@
   <meta name="author" content="xinibb">
   <meta name="keywords" content="">
   
-    <meta name="description" content="qaq">
+    <meta name="description" content="忘了又看">
 <meta property="og:type" content="article">
 <meta property="og:title" content="设计模式">
 <meta property="og:url" content="https://xinibb.github.io/blog/2023/05/29/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
 <meta property="og:site_name" content="xinibb">
-<meta property="og:description" content="qaq">
+<meta property="og:description" content="忘了又看">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://img1.imgtp.com/2023/05/30/PFfKwPj7.png">
+<meta property="og:image" content="https://img1.imgtp.com/2023/05/31/jWzZg2AD.png">
 <meta property="article:published_time" content="2023-05-29T11:35:48.000Z">
-<meta property="article:modified_time" content="2023-05-30T04:57:54.033Z">
+<meta property="article:modified_time" content="2023-05-31T03:43:55.372Z">
 <meta property="article:author" content="xinibb">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://img1.imgtp.com/2023/05/30/PFfKwPj7.png">
@@ -221,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2k 字
+          3.1k 字
         
       </span>
     
@@ -232,7 +233,7 @@
         
         
         
-          17 分钟
+          27 分钟
         
       </span>
     
@@ -275,7 +276,7 @@
             
               <div class="markdown-body">
                 
-                <h2 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h2><p><img src="https://img1.imgtp.com/2023/05/30/PFfKwPj7.png" srcset="/blog/img/loading.gif" lazyload alt="单例模式"></p>
+                <h1 id="创建型"><a href="#创建型" class="headerlink" title="创建型"></a>创建型</h1><h2 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h2><p><img src="https://img1.imgtp.com/2023/05/30/PFfKwPj7.png" srcset="/blog/img/loading.gif" lazyload alt="单例模式"></p>
 <p>太阳系里只有一个太阳，太阳东升西落，循环往复，不多不少仅此一例。</p>
 <h3 id="饿汉式"><a href="#饿汉式" class="headerlink" title="饿汉式"></a>饿汉式</h3><p>即在初始阶段就主动进行实例化，并时刻保持一种渴求状态，无论此单例是否有人使用。</p>
 <div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Sun</span> &#123;
@@ -326,6 +327,40 @@ sun = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Sun<
  &#125;</code></pre></div>
 <p>关键字volatile对静态变量的修饰则能<strong>保证变量值在各线程访问时的同步性、唯一性。</strong><br>第7行又加上了同步块以防止多个线程同时进入，一共用了2个嵌套的判空逻辑，这就是懒加载模式的“双检锁”：<strong>外层放宽入口</strong>，保证线程并发的高效性；<strong>内层加锁同步</strong>，保证实例化的单次运行。</p>
 <h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>相比“懒汉式”，其实在大多数情况下通常会更多地使用“饿汉式”，原因在于这个单例迟早是要被实例化占用内存的，延迟懒加载的意义并不大，加锁解锁反而是一种资源浪费，同步更是会降低CPU的利用率，使用不当的话反而会带来不必要的风险。越简单的包容性越强，而越复杂的反而越容易出错。</p>
+<h1 id="行为型"><a href="#行为型" class="headerlink" title="行为型"></a>行为型</h1><h2 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h2><p><img src="https://img1.imgtp.com/2023/05/31/jWzZg2AD.png" srcset="/blog/img/loading.gif" lazyload alt="策略模式"></p>
+<p>策略模式强调的是行为的灵活切换，比如一个类的多个方法有着类似的行为接口，可以将它们抽离出来作为一系列策略类，在运行时灵活对接，变更其算法策略，以适应不同的场景。<br>下面定义一个统一的算法策略接口：</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Strategy</span> &#123;
+<span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">calculate</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span>;<span class="hljs-comment">//操作数a，被操作数b</span>
+&#125;</code></pre></div>
+<p>接着分别定义加法策略、减法策略对应的实现类:</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Addition</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Strategy</span>&#123;
+<span class="hljs-meta">@Override</span>
+<span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">calculate</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> &#123;<span class="hljs-comment">//加数与被加数作为参数</span>
+<span class="hljs-keyword">return</span> a + b;<span class="hljs-comment">//做加法运算并返回结果</span>
+&#125;
+ &#125;
+ <span class="hljs-comment">//减法省略······</span></code></pre></div>
+<p>将算法策略注入客户端，使用这一系列算法策略。</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Context</span> &#123;<span class="hljs-comment">//包含策略接口的系统环境，对外提供更换策略实现的方法setStrategy()以及执行策略的方法</span>
+ <span class="hljs-keyword">private</span> Strategy strategy;<span class="hljs-comment">//算法策略接口</span>
+ <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setStrategy</span><span class="hljs-params">(Strategy strategy)</span> &#123;<span class="hljs-comment">//注入算法策略</span>
+ <span class="hljs-built_in">this</span>.strategy = strategy;
+ &#125;
+ <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">getResult</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span>&#123;<span class="hljs-comment">//其本身并不关心执行的是哪种策略实现。</span>
+ <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.strategy.calculate(a, b);<span class="hljs-comment">//返回具体策略的运算结果</span>
+&#125;
+ &#125;</code></pre></div>
+<p>在setStrategy()中注入的策略，将在getResult()中被使用。</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;
+ <span class="hljs-type">Context</span> <span class="hljs-variable">c</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Context</span>();<span class="hljs-comment">//实例化</span>
+ c.setStrategy(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Addition</span>());<span class="hljs-comment">//注入加法策略实现</span>
+ System.out.println(c.getResult(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>));<span class="hljs-comment">//输出结果为2</span>
+ c.setStrategy(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Subtraction</span>());<span class="hljs-comment">//再注入减法策略实现</span>
+ System.out.println(c.getResult(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>));<span class="hljs-comment">// 输出结果为0</span>
+ &#125;</code></pre></div>
+<p>只需注入相应的算法策略即可得到结果。此外，今后若要进行功能扩展，只需要新增兼容策略接口的算法策略类（如乘法、除法等）。</p>
+<h3 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h3><p>策略模式让策略与系统环境彻底解耦，通过对算法策略的抽象、拆分，再拼装使系统行为的可塑性得到了增强。策略接口的引入也让各种策略实现彻底解放，最终实现算法分立，即插即用。</p>
+<p>策略模式的运用能让系统的应变能力得到提升，适应随时变化的需求。接口的巧妙运用让一系列的策略可以脱离系统而单独存在，使系统拥有更灵活、更强大的“可插拔”扩展功能。</p>
 
                 
               </div>
@@ -333,6 +368,27 @@ sun = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Sun<
             <hr/>
             <div>
               <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/blog/categories/%E7%AC%94%E8%AE%B0/" class="category-chain-item">笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
   
   
 </div>
@@ -388,12 +444,18 @@ sun = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Sun<
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/blog/2023/05/31/redis/" title="redis">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">redis</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/blog/2023/05/19/Docker/" title="Docker">
-                        <span class="hidden-mobile">Docker</span>
+                      <a href="/blog/2023/05/19/Docker%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/" title="Docker安装与使用">
+                        <span class="hidden-mobile">Docker安装与使用</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
