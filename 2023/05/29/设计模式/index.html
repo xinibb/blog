@@ -25,8 +25,10 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://img1.imgtp.com/2023/05/30/PFfKwPj7.png">
 <meta property="og:image" content="https://img1.imgtp.com/2023/05/31/jWzZg2AD.png">
+<meta property="og:image" content="https://img1.imgtp.com/2023/05/31/JMsKx7a6.png">
+<meta property="og:image" content="https://img1.imgtp.com/2023/06/02/xhv6834h.jpg">
 <meta property="article:published_time" content="2023-05-29T11:35:48.000Z">
-<meta property="article:modified_time" content="2023-05-31T03:43:55.372Z">
+<meta property="article:modified_time" content="2023-06-02T09:55:48.998Z">
 <meta property="article:author" content="xinibb">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://img1.imgtp.com/2023/05/30/PFfKwPj7.png">
@@ -222,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.1k 字
+          5.7k 字
         
       </span>
     
@@ -233,7 +235,7 @@
         
         
         
-          27 分钟
+          48 分钟
         
       </span>
     
@@ -361,6 +363,90 @@ sun = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Sun<
 <p>只需注入相应的算法策略即可得到结果。此外，今后若要进行功能扩展，只需要新增兼容策略接口的算法策略类（如乘法、除法等）。</p>
 <h3 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h3><p>策略模式让策略与系统环境彻底解耦，通过对算法策略的抽象、拆分，再拼装使系统行为的可塑性得到了增强。策略接口的引入也让各种策略实现彻底解放，最终实现算法分立，即插即用。</p>
 <p>策略模式的运用能让系统的应变能力得到提升，适应随时变化的需求。接口的巧妙运用让一系列的策略可以脱离系统而单独存在，使系统拥有更灵活、更强大的“可插拔”扩展功能。</p>
+<h2 id="命令模式"><a href="#命令模式" class="headerlink" title="命令模式"></a>命令模式</h2><p><img src="https://img1.imgtp.com/2023/05/31/JMsKx7a6.png" srcset="/blog/img/loading.gif" lazyload alt="命令模式"><br>命令是一个对象向另一个或多个对象发送的指令信息。命令的发送方负责下达指令，接收方则根据命令触发相应的行为，命令模式能够<strong>将指令信息封装成一个对象</strong>，并将此对象作为参数发送给接收方去行，以使命令的请求方与执行方解耦，双方只通过传递各种命令对象来完成任务。</p>
+<p>从命令执行方（Recelver）开始代码实战。灯泡类一定有这样2个行为：通电灯亮，断电灯灭。</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Bulb</span> &#123;<span class="hljs-comment">//命令执行方</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">on</span><span class="hljs-params">()</span>&#123;
+System.out.println(<span class="hljs-string">&quot;灯亮。&quot;</span>);
+&#125;
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">off</span><span class="hljs-params">()</span>&#123;
+System.out.println(<span class="hljs-string">&quot;灯灭。&quot;</span>);
+&#125; 
+&#125;</code></pre></div>
+<p>定义一个命令接口，以确立命令的执行规范。</p>
+<div class="code-wrapper"><pre><code class="hljs java"> <span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Command</span> &#123;<span class="hljs-comment">//命令接口</span>
+ <span class="hljs-keyword">void</span> <span class="hljs-title function_">execute</span><span class="hljs-params">()</span>;<span class="hljs-comment">//执行命令</span>
+&#125;</code></pre></div>
+<p>实现“开命令”（OnCommand）与“关命令”（OffCommand）两个实现类。</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OnCommand</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Command</span> &#123;<span class="hljs-comment">//开灯命令实现</span>
+ <span class="hljs-keyword">private</span> Bulb bulb;
+ <span class="hljs-keyword">public</span> <span class="hljs-title function_">OnCommand</span><span class="hljs-params">(Bulb bulb)</span> &#123;
+ <span class="hljs-built_in">this</span>.bulb = bulb;
+ &#125;
+ <span class="hljs-meta">@Override</span>
+ <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">execute</span><span class="hljs-params">()</span> &#123;
+ bulb.on();<span class="hljs-comment">// 执行开灯操作</span>
+ &#125;
+&#125;
+<span class="hljs-comment">//关灯省略······</span></code></pre></div>
+<p>为灯泡接上一个开关,作为命令请求方(Invoker)，开关用来根据输入的命令控制电源的接通与切断。</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Switcher</span> &#123; 
+<span class="hljs-keyword">private</span> Command command;<span class="hljs-comment">// 设置命令</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setCommand</span><span class="hljs-params">(Command command)</span> &#123;
+ <span class="hljs-built_in">this</span>.command = command;
+&#125;
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">button</span><span class="hljs-params">()</span> &#123; <span class="hljs-comment">// 执行命令</span>
+ command.execute();
+ &#125;
+ &#125;</code></pre></div>
+<p>主程序代码：</p>
+<div class="code-wrapper"><pre><code class="hljs java"> <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;
+ <span class="hljs-type">Switcher</span> <span class="hljs-variable">switcher</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Switcher</span>();<span class="hljs-comment">//命令请求方</span>
+<span class="hljs-type">Bulb</span> <span class="hljs-variable">bulb</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Bulb</span>();<span class="hljs-comment">//命令执行方</span>
+ <span class="hljs-type">Command</span> <span class="hljs-variable">onCommand</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">OnCommand</span>(bulb);<span class="hljs-comment">//开命令</span>
+  <span class="hljs-type">Command</span> <span class="hljs-variable">offCommand</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">OffCommand</span>(bulb);<span class="hljs-comment">//关命令</span>
+ switcher.setCommand(onCommand);<span class="hljs-comment">//绑定开命令</span>
+ switcher.button();<span class="hljs-comment">//执行开命令的具体操作</span>
+ switcher.setCommand(offCommand);<span class="hljs-comment">//绑定关命令</span>
+ switcher.button();<span class="hljs-comment">//执行关命令的具体操作</span>
+ &#125;
+ &#125;</code></pre></div>
+<h3 id="小结-2"><a href="#小结-2" class="headerlink" title="小结"></a>小结</h3><p>命令模式能使我们在不改变任何现有系统代码的情况下，实现命令功能的无限扩展。命令模式巧妙地利用了命令接口将命令请求方与命令执行方隔离开来，使发号施令者与任务执行者解耦，甚至意识不到对方接口的存在而全靠命令的上传下达。</p>
+<p>任何模式都有优缺点。命令模式可能会导致系统中命令类定义泛滥的问题。命令模式其实与策略模式非常类似，只不过前者较后者多了一层封装，命令接口的统一确立，使系统可以忽略命令执行方接口的多样性与复杂性，将接口对接与业务逻辑交给具体的命令去实现，并且实现命令的无限扩展。</p>
+<h2 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h2><p><img src="https://img1.imgtp.com/2023/06/02/xhv6834h.jpg" srcset="/blog/img/loading.gif" lazyload alt="观察者模式"></p>
+<p>观察者往往眼观六路，耳听八方，随时监控着被观察对象的一举一动。作为主动方的观察者对象必须与被观察对象建立依赖关系，以获得其最新动态。</p>
+<p>观察者模式可以有任意多个观察者对象同时监听某一个对象。监听某个对象的叫观察者（Observer）。</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Observer</span>&#123;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">update</span><span class="hljs-params">()</span>; <span class="hljs-comment">//更新方法</span>
+&#125;</code></pre></div>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ObserverImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Observer</span>&#123;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">update</span><span class="hljs-params">()</span>&#123;   <span class="hljs-comment">//更新方法</span>
+    <span class="hljs-comment">//省略</span>
+    &#125;
+&#125;</code></pre></div>
+<p>被监听的对象叫被观察者（Subject） 。被观察者对象在内容或状态发生改变时，会通知所有观察者，使它们能自动更新自己的信息。</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Subject</span> &#123;
+    <span class="hljs-keyword">private</span> List&lt;Observer&gt; obsList = <span class="hljs-keyword">new</span> <span class="hljs-title class_">List</span>&lt;Observer&gt;();    <span class="hljs-comment">//定义一个观察者数组</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addObserver</span><span class="hljs-params">(Oberver obs)</span>       <span class="hljs-comment">//增加一个观察者</span>
+    &#123;<span class="hljs-built_in">this</span>.obsList.add(obs); &#125;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">delObserver</span><span class="hljs-params">(Observer obs)</span><span class="hljs-comment">//删除观察者</span>
+    &#123;<span class="hljs-built_in">this</span>.obsList.remove(obs);&#125;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">notifyObservers</span><span class="hljs-params">()</span>&#123;    <span class="hljs-comment">//通知所有观察者</span>
+    <span class="hljs-keyword">for</span> (Observer obs:<span class="hljs-built_in">this</span>.obsList)&#123;
+              obs.update();
+         &#125;
+     &#125;
+&#125;</code></pre></div>
+<p>被观察者的具体实现：</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SubjectImpl</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Subject</span> &#123;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">doSomething</span><span class="hljs-params">()</span>&#123; <span class="hljs-comment">//具体的业务</span>
+        <span class="hljs-comment">/*</span>
+<span class="hljs-comment">        do something</span>
+<span class="hljs-comment">       */</span>
+       <span class="hljs-built_in">super</span>.notifyObservers();<span class="hljs-comment">//执行obs.update();通知观察者们</span>
+     &#125;
+&#125;</code></pre></div>
+<h3 id="小结-3"><a href="#小结-3" class="headerlink" title="小结"></a>小结</h3><p>观察者模式被大量应用于具有一对多关系对象结构的场景，它支持多个观察者订阅一个目标主题。一旦目标主题的状态发生变化，目标对象便主动进行广播，即刻对所有订阅者（观察者）发布全员消息通知。<br>基于这种一对多的关系网，观察者模式以多态化（泛型化）的方式弱化了目标主题与观察者之间强耦合的依赖关系，标准化它们的消息交互接口，使目标主题（单方）的任何状态更新都能被即刻通过广播的形式通知观察者们（多方）。</p>
 
                 
               </div>
@@ -444,9 +530,9 @@ sun = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Sun<
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/blog/2023/05/31/redis/" title="redis">
+                      <a href="/blog/2023/05/31/%E8%AE%A9Redis%E5%9C%A8Docker%E8%B7%91/" title="Docker上跑一个Redis">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">redis</span>
+                        <span class="hidden-mobile">Docker上跑一个Redis</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     

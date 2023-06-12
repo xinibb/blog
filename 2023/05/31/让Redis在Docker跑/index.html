@@ -16,20 +16,25 @@
   <meta name="author" content="xinibb">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
-<meta property="og:title" content="redis">
-<meta property="og:url" content="https://xinibb.github.io/blog/2023/05/31/redis/">
+    <meta name="description" content="记录一下跑一个Redis容器 及配置Redis。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker上跑一个Redis">
+<meta property="og:url" content="https://xinibb.github.io/blog/2023/05/31/%E8%AE%A9Redis%E5%9C%A8Docker%E8%B7%91/">
 <meta property="og:site_name" content="xinibb">
+<meta property="og:description" content="记录一下跑一个Redis容器 及配置Redis。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img1.imgtp.com/2023/06/02/3dQMrwip.png">
 <meta property="article:published_time" content="2023-05-31T02:51:34.000Z">
-<meta property="article:modified_time" content="2023-05-31T03:44:19.749Z">
+<meta property="article:modified_time" content="2023-06-02T15:02:40.298Z">
 <meta property="article:author" content="xinibb">
-<meta property="article:tag" content="redis">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://img1.imgtp.com/2023/06/02/3dQMrwip.png">
   
   
   
-  <title>redis - xinibb</title>
+  <title>Docker上跑一个Redis - xinibb</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -195,7 +200,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="redis"></span>
+            <span id="subtitle" data-typed-text="Docker上跑一个Redis"></span>
           
         </div>
 
@@ -218,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          540 字
         
       </span>
     
@@ -229,7 +234,7 @@
         
         
         
-          1 分钟
+          5 分钟
         
       </span>
     
@@ -267,12 +272,23 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">redis</h1>
+            <h1 style="display: none">Docker上跑一个Redis</h1>
             
             
               <div class="markdown-body">
                 
-                
+                <p>可以用docker pull redis命令下载最新版本的Redis镜像，也可以用“docker pull redis:标签”命令下载指定版本的Redis，如果不指定，就会用默认的标签latest去下载最新版本的Redis镜像。</p>
+<div class="code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">docker pull redis</span></code></pre></div>
+<p>run一个redis容器</p>
+<div class="code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">docker</span> run -itd --name myredis -p <span class="hljs-number">6379</span>:<span class="hljs-number">6379</span> redis:latest</code></pre></div>
+<p>这里的-it表示在终端交互式操作，d表示在后台运行；通过–name指定该容器的名字；通过-p参数指定容器的6379端口映射到宿主机（即运行Docker的机器）6379端口，这样在容器外部就能以宿主机ip:6379的方式访问Redis服务；最后的redis:latest参数指定根据该镜像启动容器。	<br>可以使用下面命令查看容器启动时的日志</p>
+<div class="code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">docker logs myredis</span></code></pre></div>
+
+<p><img src="https://img1.imgtp.com/2023/06/02/3dQMrwip.png" srcset="/blog/img/loading.gif" lazyload alt="日志图片"><br>可以通过如下的exec命令进入Redis容器</p>
+<div class="code-wrapper"><pre><code class="hljs awk">docker exec -it myredis <span class="hljs-regexp">/bin/</span>bash</code></pre></div>
+<p>docker exec表示在运行的容器中执行命令，其中myredis参数表示在哪个容器(容器name)里执行命令。</p>
+<p>再使用命令redis-cli创建一个连接到redis服务器的客户端，客户端能对服务器发送命令请求如 set val 1、get val。</p>
+
                 
               </div>
             
@@ -305,7 +321,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/blog/tags/redis/">#redis</a>
+        <a href="/blog/tags/Docker/">#Docker</a>
+      
+        <a href="/blog/tags/Redis/">#Redis</a>
       
     </div>
   
@@ -317,8 +335,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>redis</div>
-      <div>https://xinibb.github.io/blog/2023/05/31/redis/</div>
+      <div>Docker上跑一个Redis</div>
+      <div>https://xinibb.github.io/blog/2023/05/31/让Redis在Docker跑/</div>
     </div>
     <div class="license-meta">
       
@@ -361,6 +379,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/blog/2023/06/09/ajax/" title="ajax">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ajax</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">

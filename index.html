@@ -186,7 +186,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="不对劲，有问题！"></span>
+            <span id="subtitle" data-typed-text="细细窥探镜子里，还想一睹以你笑靥。"></span>
           
         </div>
 
@@ -224,15 +224,48 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/blog/2023/05/31/redis/" target="_self">
-          redis
+        <a href="/blog/2023/06/09/ajax/" target="_self">
+          ajax
         </a>
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/blog/2023/05/31/redis/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/blog/2023/06/09/ajax/" target="_self">
         <div>
           
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-06-09 13:23" pubdate>
+              2023-06-09
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/blog/2023/05/31/%E8%AE%A9Redis%E5%9C%A8Docker%E8%B7%91/" target="_self">
+          Docker上跑一个Redis
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/blog/2023/05/31/%E8%AE%A9Redis%E5%9C%A8Docker%E8%B7%91/" target="_self">
+        <div>
+          记录一下跑一个Redis容器 及配置Redis。
         </div>
       </a>
 
@@ -271,7 +304,9 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/blog/tags/redis/">#redis</a>
+              <a href="/blog/tags/Docker/">#Docker</a>
+            
+              <a href="/blog/tags/Redis/">#Redis</a>
             
           </div>
         
@@ -482,37 +517,7 @@
       }
       var text = subtitle.getAttribute('data-typed-text');
       
-        jQuery.ajax({
-          type: 'GET',
-          url: '',
-          headers: {},
-          dataType: 'json',
-          success: function(result) {
-            var apiText;
-            if (result) {
-              var keys = ''.split(',');
-              if (result instanceof Array) {
-                result = result[0];
-              }
-              for (const k of keys) {
-                var value = result[k];
-                if (typeof value === 'string') {
-                  apiText = value;
-                  break;
-                } else if (value instanceof Object) {
-                  result = value;
-                }
-              }
-            }
-            apiText ? typing(apiText) : typing(text);
-          },
-          error: function(xhr, status, error) {
-            if (error) {
-              console.error('Failed to request :', error);
-            }
-            typing(text);
-          }
-        })
+        typing(text);
       
     })(window, document);
   </script>
