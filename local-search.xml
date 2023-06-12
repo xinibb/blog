@@ -8,9 +8,15 @@
     <link href="/blog/2023/06/09/ajax/"/>
     <url>/blog/2023/06/09/ajax/</url>
     
-    <content type="html"><![CDATA[]]></content>
+    <content type="html"><![CDATA[<p>AJAX 代表异步的 JavaScript 和 XML（Asynchronous JavaScript And XML）。简单点说，就是使用 <strong>XMLHttpRequest</strong> 对象与服务器通信。它可以使用 JSON、XML、HTML 和文本文件等格式发送和接收数据。AJAX 最吸引人的就是它的“异步”特性，也就是说它可以在不重新刷新页面的情况下与服务器通信，交换数据，或更新页面。</p><h2 id="简单使用"><a href="#简单使用" class="headerlink" title="简单使用"></a>简单使用</h2><p>首先新建一个XMLHttpRequest对象，设置了XMLHttpRequest 对象的 onreadystatechange 属性由哪一个 JavaScript 函数处理响应。这里是handler()。</p><div class="code-wrapper"><pre><code class="hljs actionscript"><span class="hljs-keyword">const</span> httpRequest = <span class="hljs-keyword">new</span> XMLHttpRequest();httpRequest.onreadystatechange = handler;<span class="hljs-keyword">function</span> <span class="hljs-title function_">handler</span><span class="hljs-params">()</span> &#123;  <span class="hljs-comment">// 在这里处理服务器响应。</span>&#125;</code></pre></div><p>要注意的是，函数名后没有括号和参数，因为这是把一个引用赋值给了函数，而不是真正的调用了它。也可以这样写：</p><div class="code-wrapper"><pre><code class="hljs abnf">httpRequest.onreadystatechange <span class="hljs-operator">=</span> () <span class="hljs-operator">=</span>&gt; &#123;  // 在这里处理服务器响应。&#125;<span class="hljs-comment">;</span></code></pre></div><p>通过调用 HTTP 请求对象的 open() 和 send() 方法发送一个实际的请求</p><div class="code-wrapper"><pre><code class="hljs accesslog">httpRequest.open(<span class="hljs-string">&quot;<span class="hljs-keyword">GET</span>&quot;</span>, <span class="hljs-string">&quot;http://www.example.org/some.file&quot;</span>, true);httpRequest.send();</code></pre></div><p>第一个参数是 HTTP 请求方法——GET，POST，HEAD 以及服务器支持的其他方法,第二个参数是你要发送请求的 URL,第三个参数是可选的，用于设置请求是否是异步的,默认为true。<br>send() 方法的参数可以是任何你想发送给服务器的内容，使用send方法传递参数使用的是POST方法，需要设定Content-Type头信息。</p><div class="code-wrapper"><pre><code class="hljs pf">httpRequest.<span class="hljs-built_in">set</span>RequestHeader(  <span class="hljs-string">&quot;Content-Type&quot;</span>,  <span class="hljs-string">&quot;application/x-www-form-urlencoded&quot;</span>);</code></pre></div><p>在发送请求时，上文说到的 函数名handler负责处理响应。<br>可以先查看请求的状态httpRequest.readyState的值：<br>0（未初始化）或（请求还未初始化）<br>1（正在加载）或（已建立服务器链接）<br>2（已加载）或（请求已接收）<br>3（交互）或（正在处理请求）<br>4（完成）或（请求已完成并且响应已准备好）<br>再检查 HTTP 响应的响应状态码httpRequest.status的值。通过检查响应码 200 OK 判断 AJAX 调用有没有成功。<br>检查完请求状态和 HTTP 响应码后，就可以使用返回的数据了，有两个方法去访问这些数据：<br>httpRequest.responseText：以文本字符串的方式返回服务器响应。<br>httpRequest.responseXML：以 XMLDocument 对象的形式返回服务器响应。</p><h2 id="JQuery中ajax的使用"><a href="#JQuery中ajax的使用" class="headerlink" title="JQuery中ajax的使用"></a>JQuery中ajax的使用</h2>]]></content>
     
     
+    
+    <tags>
+      
+      <tag>ajax</tag>
+      
+    </tags>
     
   </entry>
   
