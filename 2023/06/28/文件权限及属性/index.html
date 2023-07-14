@@ -16,25 +16,24 @@
   <meta name="author" content="青椒猫耳朵">
   <meta name="keywords" content="">
   
-    <meta name="description" content="记录一下跑一个Redis容器 及配置Redis。">
+    <meta name="description" content="文件权限、特殊权限、ACL权限、文件隐藏属性">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Docker上跑一个Redis">
-<meta property="og:url" content="https://xinibb.github.io/blog/2023/05/31/%E8%AE%A9Redis%E5%9C%A8Docker%E8%B7%91/">
+<meta property="og:title" content="文件权限及属性">
+<meta property="og:url" content="https://xinibb.github.io/blog/2023/06/28/%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E5%8F%8A%E5%B1%9E%E6%80%A7/">
 <meta property="og:site_name" content="xinibb">
-<meta property="og:description" content="记录一下跑一个Redis容器 及配置Redis。">
+<meta property="og:description" content="文件权限、特殊权限、ACL权限、文件隐藏属性">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://xinibb.github.io/blog/img/redis.jpg">
-<meta property="article:published_time" content="2023-05-31T02:51:34.000Z">
-<meta property="article:modified_time" content="2023-06-13T07:10:16.803Z">
+<meta property="og:image" content="https://xinibb.github.io/blog/img/mo.jpeg">
+<meta property="article:published_time" content="2023-06-28T06:34:59.000Z">
+<meta property="article:modified_time" content="2023-07-11T12:30:08.584Z">
 <meta property="article:author" content="青椒猫耳朵">
-<meta property="article:tag" content="Docker">
-<meta property="article:tag" content="Redis">
+<meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://xinibb.github.io/blog/img/redis.jpg">
+<meta name="twitter:image" content="https://xinibb.github.io/blog/img/mo.jpeg">
   
   
   
-  <title>Docker上跑一个Redis - xinibb</title>
+  <title>文件权限及属性 - xinibb</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -200,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Docker上跑一个Redis"></span>
+            <span id="subtitle" data-typed-text="文件权限及属性"></span>
           
         </div>
 
@@ -211,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-05-31 10:51" pubdate>
-          2023年5月31日 上午
+        <time datetime="2023-06-28 14:34" pubdate>
+          2023年6月28日 下午
         </time>
       </span>
     
@@ -223,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          540 字
+          2.3k 字
         
       </span>
     
@@ -234,7 +233,7 @@
         
         
         
-          5 分钟
+          19 分钟
         
       </span>
     
@@ -272,22 +271,87 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Docker上跑一个Redis</h1>
+            <h1 style="display: none">文件权限及属性</h1>
             
             
               <div class="markdown-body">
                 
-                <p>可以用docker pull redis命令下载最新版本的Redis镜像，也可以用“docker pull redis:标签”命令下载指定版本的Redis，如果不指定，就会用默认的标签latest去下载最新版本的Redis镜像。</p>
-<div class="code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">docker pull redis</span></code></pre></div>
-<p>run一个redis容器</p>
-<div class="code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">docker</span> run -itd --name myredis -p <span class="hljs-number">6379</span>:<span class="hljs-number">6379</span> redis:latest</code></pre></div>
-<p>这里的-it表示在终端交互式操作，d表示在后台运行；通过–name指定该容器的名字；通过-p参数指定容器的6379端口映射到宿主机（即运行Docker的机器）6379端口，这样在容器外部就能以宿主机ip:6379的方式访问Redis服务；最后的redis:latest参数指定根据该镜像启动容器。	<br>可以使用下面命令查看容器启动时的日志</p>
-<div class="code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">docker logs myredis</span></code></pre></div>
-
-<p><img src="https://img1.imgtp.com/2023/06/02/3dQMrwip.png" srcset="/blog/img/loading.gif" lazyload alt="日志图片"><br>可以通过如下的exec命令进入Redis容器</p>
-<div class="code-wrapper"><pre><code class="hljs awk">docker exec -it myredis <span class="hljs-regexp">/bin/</span>bash</code></pre></div>
-<p>docker exec表示在运行的容器中执行命令，其中myredis参数表示在哪个容器(容器name)里执行命令。</p>
-<p>再使用命令redis-cli创建一个连接到redis服务器的客户端，客户端能对服务器发送命令请求如 set val 1、get val。</p>
+                <h2 id="文件权限"><a href="#文件权限" class="headerlink" title="文件权限"></a>文件权限</h2><p>在Linux系统中，每个文件都有归属的所有者和所属组，并且规定了文件的所有者、所属组以及其他人对文件所拥有的可读（r）、可写（w）、可执行（x）等权限。对于一般文件来说，权限比较容易理解：“r”表示能够读取文件的实际内容；“w”表示能够编辑、新增、修改、删除文件的实际内容；“x”则表示能够运行一个脚本程序。对于目录文件来说，“r”表示能够读取目录内的文件列表；<strong>“w”表示能够在目录内新增、删除、重命名文件或目录</strong>；而“x”则表示能够进入该目录。</p>
+<p><img src="https://img1.imgtp.com/2023/07/10/k8JI8741.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>文件权限的数字表示法基于字符（rwx）的权限计算而来，其目的是简化权限的表示方式。例如，若某个文件的权限为7，则代表可读、可写、可执行（4+2+1）；若权限为6，则代表可读、可写（4+2）。我们来看一个例子。现在有这样一个文件，其所有者拥有可读、可写、可执行的权限，其文件所属组拥有可读、可写的权限；其他人只有可读的权限。那么，这个文件的权限就是rwxrw-r–，数字法表示即为764。</p>
+<p><img src="https://img1.imgtp.com/2023/07/10/J37GO6KI.png" srcset="/blog/img/loading.gif" lazyload></p>
+<h2 id="文件特殊权限"><a href="#文件特殊权限" class="headerlink" title="文件特殊权限"></a>文件特殊权限</h2><p><strong>SUID</strong></p>
+<p>SUID是一种对二进制程序进行设置的特殊权限，能够让二进制程序的执行者（普通用户）临时拥有所有者的权限（仅对拥有执行权限的二进制程序有效）。</p>
+<p>所有用户都可以执行passwd命令来修改自己的用户密码，而用户密码保存在&#x2F;etc&#x2F;shadow文件中（文件所有者为root）。仔细查看这个文件就会发现它的默认权限是000，也就是说除了root管理员以外，所有用户都没有查看或编辑该文件的权限（root超级管理员可以对任何文件进行修改）。但是，在使用passwd命令时如果加上SUID特殊权限位，就可让普通用户临时获得程序所有者的身份，把变更的密码信息写入到shadow文件中。</p>
+<p>SUID权限使用s表示，增加权限u+s，移除权限u-s；如果原先权限位上没有x执行权限，那么被赋予特殊权限后将变成大写的S。用数字形式表示，0表示去除SUID权限，4表示添加SUID权限，而且<strong>是在原权限的数字表达形式开头加0或4</strong>，如：0755移除SIUD权限，4755添加SUID权限。</p>
+<p><strong>SGID</strong></p>
+<p>SGID特殊权限有两种应用场景：当对二进制程序进行设置时，能够让执行者临时获取文件所属组的权限；当对目录进行设置时，则是让目录内新创建的文件自动继承该目录原有用户组的名称。</p>
+<p>平时需要查看系统的进程状态，为了能够获取进程的状态信息，可在用于查看系统进程状态的ps命令文件上增加SGID特殊权限位。这样一来，由于ps命令被增加了SGID特殊权限位，所以当用户执行该命令时，也就临时获取到了system用户组的权限，从而顺利地读取到了设备文件。</p>
+<p>SGID权限使用s表示，增加权限g+s，移除权限g-s；如果原先权限位上没有x执行权限，那么被赋予特殊权限后将变成大写的S。用数字形式表示，0表示去除SGID权限，2表示添加SGID权限，而且<strong>是在原权限的数字表达形式开头加0或2</strong>，如：0755移除SGID权限，2755添加SGID权限。</p>
+<p><strong>SBIT</strong></p>
+<p>SBIT特殊权限位可确保用户只能删除自己的文件，而不能删除其他用户的文件。换句话说，当对某个目录设置了SBIT粘滞位权限后，那么该目录中的文件就只能被其所有者删除了。当目录被设置SBIT特殊权限位后，文件的其他用户权限部分的x执行权限就会被替换成t或者T—原本有x执行权限则会写成t，原本没有x执行权限则会被写成T。</p>
+<p>SBIT权限使用t表示，增加权限o+t，移除权限o-t；如果原先权限位上没有x执行权限，那么被赋予特殊权限后将变成大写的T。用数字形式表示，0表示去除SBIT权限，1表示添加SBIT权限，而且<strong>是在原权限的数字表达形式开头加0或1</strong>，如：0755移除SBIT权限，1755添加SBIT权限。</p>
+<p>示例</p>
+<p><img src="https://img1.imgtp.com/2023/07/10/stebJNgL.jpg" srcset="/blog/img/loading.gif" lazyload></p>
+<p><img src="https://img1.imgtp.com/2023/07/10/YeupfEYP.jpg" srcset="/blog/img/loading.gif" lazyload></p>
+<h2 id="ACL权限"><a href="#ACL权限" class="headerlink" title="ACL权限"></a>ACL权限</h2><p>ACL也就是（Access Control List）<br>chmod命令可以把文件权限分为u,g,o三个组，setfacl可以对指定的用户或用户组设置文件或目录的操作权限，更加精准地派发权限。getfacl 命令用于查看文件或目录当前设定的 ACL 权限信息。<br>setfacl 参数<br>  -m：添加acl参数<br>  -x：删除acl参数<br>  -b：删除全部的acl参数<br>  -k：删除默认的acl参数<br>  -R：递归设置acl，包括子目录<br>  -d：设置默认acl （对文件夹设置后所有新建的子文件都会 ACL 权限）</p>
+<p>示例</p>
+<p>将xinibb用户对aclacl文件的权限修改成rwx</p>
+<p>删除xinibb对aclacl文件的权限命令： setfacl -x u:xinibb:rwx aclacl</p>
+<p><img src="https://img1.imgtp.com/2023/07/11/8vCsMLA3.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>备份和恢复</p>
+<p><img src="https://img1.imgtp.com/2023/07/11/WEYYXTfe.png" srcset="/blog/img/loading.gif" lazyload></p>
+<h2 id="文件的隐藏属性"><a href="#文件的隐藏属性" class="headerlink" title="文件的隐藏属性"></a>文件的隐藏属性</h2><p><strong>chattr</strong>命令用于设置文件的隐藏权限，英文全称为change attributes，语法格式为“chattr [参数] 文件名称”。</p>
+<p>如果想要把某个隐藏功能添加到文件上，则需要在命令后面追加“+参数”，如果想要把某个隐藏功能移出文件，则需要追加“-参数”。</p>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">i</td>
+<td>无法对文件进行修改；若对目录设置了该参数，则仅能修改其中的子文件内容而不能新建或删除文件</td>
+</tr>
+<tr>
+<td align="left">a</td>
+<td>仅允许补充（追加）内容，无法覆盖&#x2F;删除内容</td>
+</tr>
+<tr>
+<td align="left">A</td>
+<td>不再修改这个文件或目录的最后访问时间</td>
+</tr>
+<tr>
+<td align="left">s</td>
+<td>彻底从硬盘中删除，不可恢复</td>
+</tr>
+<tr>
+<td align="left">S</td>
+<td>文件内容在变更后立即同步到硬盘</td>
+</tr>
+<tr>
+<td align="left">b</td>
+<td>不再修改文件或目录的存取时间</td>
+</tr>
+<tr>
+<td align="left">d</td>
+<td>使用dump命令备份时忽略本文件&#x2F;目录v</td>
+</tr>
+<tr>
+<td align="left">D</td>
+<td>检查压缩文件中的错误</td>
+</tr>
+<tr>
+<td align="left">c</td>
+<td>默认将文件或目录进行压缩</td>
+</tr>
+<tr>
+<td align="left">u</td>
+<td>当删除该文件后依然保留其在硬盘中的数据，方便日后恢复</td>
+</tr>
+</tbody></table>
+<p><strong>lsattr</strong>命令用于查看文件的隐藏权限，英文全称为“list attributes”，语法格式为“lsattr [参数] 文件名称”。</p>
 
                 
               </div>
@@ -321,9 +385,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/blog/tags/Docker/">#Docker</a>
-      
-        <a href="/blog/tags/Redis/">#Redis</a>
+        <a href="/blog/tags/Linux/">#Linux</a>
       
     </div>
   
@@ -335,8 +397,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Docker上跑一个Redis</div>
-      <div>https://xinibb.github.io/blog/2023/05/31/让Redis在Docker跑/</div>
+      <div>文件权限及属性</div>
+      <div>https://xinibb.github.io/blog/2023/06/28/文件权限及属性/</div>
     </div>
     <div class="license-meta">
       
@@ -348,7 +410,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年5月31日</div>
+          <div>2023年6月28日</div>
         </div>
       
       
@@ -380,18 +442,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/blog/2023/06/09/ajax/" title="ajax">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">ajax</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/blog/2023/05/29/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="设计模式">
-                        <span class="hidden-mobile">设计模式</span>
+                      <a href="/blog/2023/06/21/Shell/" title="shell">
+                        <span class="hidden-mobile">shell</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

@@ -16,19 +16,25 @@
   <meta name="author" content="青椒猫耳朵">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="website">
-<meta property="og:title" content="关于">
-<meta property="og:url" content="https://xinibb.github.io/blog/about/">
+    <meta name="description" content="shell的4种启动方式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="shell">
+<meta property="og:url" content="https://xinibb.github.io/blog/2023/06/21/Shell/">
 <meta property="og:site_name" content="xinibb">
+<meta property="og:description" content="shell的4种启动方式">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-05-23T08:06:23.000Z">
-<meta property="article:modified_time" content="2023-05-23T08:07:17.774Z">
+<meta property="og:image" content="https://xinibb.github.io/blog/img/sjms.png">
+<meta property="article:published_time" content="2023-06-21T13:07:46.000Z">
+<meta property="article:modified_time" content="2023-07-07T13:32:50.900Z">
 <meta property="article:author" content="青椒猫耳朵">
+<meta property="article:tag" content="shell">
+<meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://xinibb.github.io/blog/img/sjms.png">
   
   
   
-  <title>关于 - xinibb</title>
+  <title>shell - xinibb</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -88,7 +94,7 @@
   <header>
     
 
-<div class="header-inner" style="height: 60vh;">
+<div class="header-inner" style="height: 70vh;">
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/blog/">
@@ -194,9 +200,49 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="关于"></span>
+            <span id="subtitle" data-typed-text="shell"></span>
           
         </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-06-21 21:07" pubdate>
+          2023年6月21日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          768 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          7 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
 
         
       </div>
@@ -212,61 +258,183 @@
 
   <main>
     
-      <div class="container nopadding-x-md">
-        <div id="board"
-          >
-          
-            <div class="about-avatar">
-              <img src="/blog/img/tinaHead.jpg" srcset="/blog/img/loading.gif" lazyload class="img-fluid" alt="avatar">
-            </div>
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
+      
 
-<div class="text-center">
-  <div class="about-info">
-    <div class="about-name">xinibb</div>
-    <div class="about-intro">练习时长两年半的个人练习生，amagi.</div>
-    <div class="about-icons">
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
       
-        
-        
-        
-        <a href=https://github.com class="
-           hint--bottom hint--rounded"
-           aria-label=GitHub
-           target="_blank"
-        >
-          <i class="iconfont icon-github-fill" aria-hidden="true"></i>
-          
-        </a>
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">shell</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Shell 是一个应用程序，它的一端连接着 Linux 内核，另一端连接着用户。Shell 是用户和 Linux 系统沟通的桥梁，我们都是通过 Shell 来管理 Linux 系统。<br>我们可以直接使用 Shell，也可以输入用户名和密码后再使用 Shell；第一种叫做非登录式，第二种叫做登录式。<br>我们可以在 Shell 中一个个地输入命令并及时查看它们的输出结果，整个过程都在跟 Shell 不停地互动，这叫做交互式。我们也可以运行一个 Shell 脚本文件，让所有命令批量化、一次性地执行，这叫做非交互式。<br>总起来说，Shell 一共有四种运行方式：<br>1.交互式的登录 Shell<br>2.交互式的非登录 Shell；<br>3.非交互式的登录 Shell；<br>4.非交互式的非登录 Shell。</p>
+<h2 id="判断-Shell-是否是交互式"><a href="#判断-Shell-是否是交互式" class="headerlink" title="判断 Shell 是否是交互式"></a>判断 Shell 是否是交互式</h2><p> 方法一：查看变量-的值，如果值中包含了字母i，则表示交互式（interactive）。</p>
+<p>终端下输出<code>-</code>的值</p>
+<p><img src="https://img1.imgtp.com/2023/07/07/kylMoCU9.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>在 Shell 脚本文件中输出<code>-</code>的值</p>
+<p><img src="https://img1.imgtp.com/2023/07/07/fs9wglmX.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>方法二： 查看变量<code>PS1</code>的值，如果非空，则为交互式，否则为非交互式，因为非交互式会清空该变量。</p>
+<p>终端下输出 PS1 的值</p>
+<p><img src="https://img1.imgtp.com/2023/07/07/Vi9vTYdY.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>在 Shell 脚本文件中输出 PS1 的值</p>
+<p><img src="https://img1.imgtp.com/2023/07/07/Y8BoNgYV.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>执行.&#x2F;test.sh文件后无输出。</p>
+<h2 id="判断-Shell-是否为登录式"><a href="#判断-Shell-是否为登录式" class="headerlink" title="判断 Shell 是否为登录式"></a>判断 Shell 是否为登录式</h2><p>执行shopt login_shell即可，值为on表示为登录式，off为非登录式</p>
+<p><img src="https://img1.imgtp.com/2023/07/07/GbqTmlVP.png" srcset="/blog/img/loading.gif" lazyload></p>
+<h2 id="常见的-Shell-启动方式"><a href="#常见的-Shell-启动方式" class="headerlink" title="常见的 Shell 启动方式"></a>常见的 Shell 启动方式</h2><p>通过 Linux 控制台（不是桌面环境自带的终端）或者 ssh 登录 Shell 时（这才是正常登录方式），为交互式的登录 Shell。</p>
+<p>执行 bash 命令时默认是非登录的，增加–login选项（简写为-l）后变成登录式。</p>
+<p>使用由()包围的组命令或者命令替换进入子 Shell 时，子 Shell 会继承父 Shell 的交互和登录属性。此种子进程只是由fork创建，没有执行exce，不会重新加载配置文件</p>
+<p><img src="https://img1.imgtp.com/2023/07/07/jb0Hzb0Z.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>ssh 执行远程命令，但不登录时，为非交互非登录式。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
       
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
         
-        
-        
-        <a href=# class="
-           hint--bottom hint--rounded"
-           aria-label=email
-           target="_blank"
-        >
-          <i class="iconfont icon-mail" aria-hidden="true"></i>
-          
-        </a>
+  <a href="/blog/categories/%E7%AC%94%E8%AE%B0/" class="category-chain-item">笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
       
+        <a href="/blog/tags/shell/">#shell</a>
+      
+        <a href="/blog/tags/Linux/">#Linux</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>shell</div>
+      <div>https://xinibb.github.io/blog/2023/06/21/Shell/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>青椒猫耳朵</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年6月21日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/blog/2023/06/28/%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E5%8F%8A%E5%B1%9E%E6%80%A7/" title="文件权限及属性">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">文件权限及属性</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2023/06/12/Jwt/" title="Jwt">
+                        <span class="hidden-mobile">Jwt</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
     </div>
   </div>
 </div>
 
-<article class="about-content page-content mt-5">
-  <div class="markdown-body">
-    
-  </div>
-
-  
-</article>
-
 
 
 
@@ -293,11 +461,8 @@
 
 
 
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
+
     
 
     
@@ -390,6 +555,46 @@
   
 
 
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
 
 
   <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>

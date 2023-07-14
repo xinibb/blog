@@ -16,25 +16,23 @@
   <meta name="author" content="青椒猫耳朵">
   <meta name="keywords" content="">
   
-    <meta name="description" content="记录一下跑一个Redis容器 及配置Redis。">
+    <meta name="description" content="json web token">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Docker上跑一个Redis">
-<meta property="og:url" content="https://xinibb.github.io/blog/2023/05/31/%E8%AE%A9Redis%E5%9C%A8Docker%E8%B7%91/">
+<meta property="og:title" content="Jwt">
+<meta property="og:url" content="https://xinibb.github.io/blog/2023/06/12/Jwt/">
 <meta property="og:site_name" content="xinibb">
-<meta property="og:description" content="记录一下跑一个Redis容器 及配置Redis。">
+<meta property="og:description" content="json web token">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://xinibb.github.io/blog/img/redis.jpg">
-<meta property="article:published_time" content="2023-05-31T02:51:34.000Z">
-<meta property="article:modified_time" content="2023-06-13T07:10:16.803Z">
+<meta property="og:image" content="https://xinibb.github.io/blog/img/sjms.png">
+<meta property="article:published_time" content="2023-06-12T12:15:50.000Z">
+<meta property="article:modified_time" content="2023-06-27T13:18:11.239Z">
 <meta property="article:author" content="青椒猫耳朵">
-<meta property="article:tag" content="Docker">
-<meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://xinibb.github.io/blog/img/redis.jpg">
+<meta name="twitter:image" content="https://xinibb.github.io/blog/img/sjms.png">
   
   
   
-  <title>Docker上跑一个Redis - xinibb</title>
+  <title>Jwt - xinibb</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -200,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Docker上跑一个Redis"></span>
+            <span id="subtitle" data-typed-text="Jwt"></span>
           
         </div>
 
@@ -211,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-05-31 10:51" pubdate>
-          2023年5月31日 上午
+        <time datetime="2023-06-12 20:15" pubdate>
+          2023年6月12日 晚上
         </time>
       </span>
     
@@ -223,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          540 字
+          3.2k 字
         
       </span>
     
@@ -234,7 +232,7 @@
         
         
         
-          5 分钟
+          28 分钟
         
       </span>
     
@@ -272,22 +270,85 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Docker上跑一个Redis</h1>
+            <h1 style="display: none">Jwt</h1>
             
             
               <div class="markdown-body">
                 
-                <p>可以用docker pull redis命令下载最新版本的Redis镜像，也可以用“docker pull redis:标签”命令下载指定版本的Redis，如果不指定，就会用默认的标签latest去下载最新版本的Redis镜像。</p>
-<div class="code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">docker pull redis</span></code></pre></div>
-<p>run一个redis容器</p>
-<div class="code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">docker</span> run -itd --name myredis -p <span class="hljs-number">6379</span>:<span class="hljs-number">6379</span> redis:latest</code></pre></div>
-<p>这里的-it表示在终端交互式操作，d表示在后台运行；通过–name指定该容器的名字；通过-p参数指定容器的6379端口映射到宿主机（即运行Docker的机器）6379端口，这样在容器外部就能以宿主机ip:6379的方式访问Redis服务；最后的redis:latest参数指定根据该镜像启动容器。	<br>可以使用下面命令查看容器启动时的日志</p>
-<div class="code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">docker logs myredis</span></code></pre></div>
+                <h2 id="JWT的简介"><a href="#JWT的简介" class="headerlink" title="JWT的简介"></a>JWT的简介</h2><h3 id="基于token的鉴权机制"><a href="#基于token的鉴权机制" class="headerlink" title="基于token的鉴权机制"></a>基于token的鉴权机制</h3><p>基于token的鉴权机制类似于http协议也是无状态的，它不需要在服务端去保留用户的认证信息或者会话信息。这就意味着基于token认证机制的应用不需要去考虑用户在哪一台服务器登录了，这就为应用的扩展提供了便利。<br>流程上是这样的：</p>
+<p>用户使用用户名密码来请求服务器<br>服务器进行验证用户的信息<br>服务器通过验证发送给用户一个token<br>客户端存储token，并在每次请求时附送上这个token值<br>服务端验证token值，并返回数据</p>
+<p>这个token必须要在每次请求时传递给服务端，它应该保存在请求头里， 另外，服务端要支持CORS(跨来源资源共享)策略，一般我们在服务端这么做就可以了Access-Control-Allow-Origin: *。<br>JWT是由三段信息构成的，将这三段信息文本用.链接一起就构成了Jwt字符串。就像这样:</p>
+<div class="code-wrapper"><pre><code class="hljs gcode">eyJ<span class="hljs-number">0</span>eXAiOiJKV<span class="hljs-number">1</span>QiLCJhbGciOiJIUzI<span class="hljs-number">1</span><span class="hljs-symbol">NiJ9</span>.eyJ<span class="hljs-number">1</span>c<span class="hljs-number">2</span>VybmFtZSI<span class="hljs-number">6</span>I<span class="hljs-symbol">nFhcSIsInJvbGUiOiJhZG1</span>pbiIsImV<span class="hljs-number">4</span>cCI<span class="hljs-number">6</span>MTY<span class="hljs-number">4</span><span class="hljs-symbol">Nzg3</span>MzU<span class="hljs-number">1</span><span class="hljs-symbol">NywianRpIjoiMzk5</span>Mzlm<span class="hljs-symbol">NjktODdmNy00</span>MjcxLWI<span class="hljs-number">0</span>MGMtMzAw<span class="hljs-symbol">NDY2</span>YjI<span class="hljs-number">3</span>Mzc<span class="hljs-number">2</span>I<span class="hljs-symbol">n0</span>.ZdqoypeZ<span class="hljs-number">1</span>-Z<span class="hljs-number">74</span><span class="hljs-symbol">nKUBTH2</span>CBx<span class="hljs-symbol">N494</span>Ck<span class="hljs-symbol">Nrx5</span>SVIq<span class="hljs-number">5</span>D<span class="hljs-name">G3</span>dQ</code></pre></div>
+<p>第一部分我们称它为头部（header),第二部分我们称其为载荷（payload, 类似于飞机上承载的物品)，第三部分是签证（signature),彼此之间使用”.”连接。</p>
+<h3 id="header"><a href="#header" class="headerlink" title="header"></a>header</h3><p>jwt的头部承载两部分信息：<br>1.声明类型，这里是jwt<br>2.声明加密的算法 通常直接使用 HMAC SHA256<br>完整的头部就像下面这样的JSON：</p>
+<div class="code-wrapper"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span>
+  &#x27;typ&#x27;<span class="hljs-punctuation">:</span> &#x27;JWT&#x27;<span class="hljs-punctuation">,</span>
+  &#x27;alg&#x27;<span class="hljs-punctuation">:</span> &#x27;HS256&#x27;
+<span class="hljs-punctuation">&#125;</span></code></pre></div>
+<p>然后将头部进行base64加密（该加密是可以对称解密的),构成了第一部分:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9</p>
+<h3 id="playload"><a href="#playload" class="headerlink" title="playload"></a>playload</h3><p>载荷就是存放有效信息的地方。这些有效信息包含三个部分</p>
+<p>1.标准中注册的声明<br>2.公共的声明<br>3.私有的声明</p>
+<p>标准中注册的声明 (建议但不强制使用) ：</p>
+<p>iss: jwt签发者<br>sub: jwt所面向的用户<br>aud: 接收jwt的一方<br>exp: jwt的过期时间，这个过期时间必须要大于签发时间<br>nbf: 定义在什么时间之前，该jwt都是不可用的.<br>iat: jwt的签发时间<br>jti: jwt的唯一身份标识，主要用来作为一次性token,从而回避重放攻击。<br>公共的声明 ： 公共的声明可以添加任何的信息，一般添加用户的相关信息或其他业务需要的必要信息.但不建议添加敏感信息，因为该部分在客户端可解密.<br>私有的声明 ： 私有声明是提供者和消费者所共同定义的声明，一般不建议存放敏感信息，因为base64是对称解密的，意味着该部分信息可以归类为明文信息。<br>定义一个payload:</p>
+<div class="code-wrapper"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span>
+  <span class="hljs-attr">&quot;sub&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;1234567890&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;xinibb&quot;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-punctuation">&#125;</span></code></pre></div>
+<h3 id="signature"><a href="#signature" class="headerlink" title="signature"></a>signature</h3><p>jwt的第三部分是一个签证信息，这个签证信息由三部分组成：</p>
+<p>header (base64后的)<br>payload (base64后的)<br>secret</p>
+<p>这个部分需要base64加密后的header和base64加密后的payload使用.连接组成的字符串，然后通过header中声明的加密方式进行加盐secret组合加密(盐自己定义)，然后就构成了jwt的第三部分。</p>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><p>secret是保存在服务器端的，jwt的签发生成也是在服务器端的，secret就是用来进行jwt的签发和jwt的验证，所以，它就是你服务端的私钥，在任何场景都不应该流露出去。一旦客户端得知这个secret, 那就意味着客户端是可以自我签发jwt了。</p>
+<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p>pom.xml文件引入依赖</p>
+<div class="code-wrapper"><pre><code class="hljs java"> &lt;dependency&gt;
+            &lt;groupId&gt;io.jsonwebtoken&lt;/groupId&gt;
+            &lt;artifactId&gt;jjwt&lt;/artifactId&gt;
+            &lt;version&gt;<span class="hljs-number">0.9</span><span class="hljs-number">.1</span>&lt;/version&gt;
+&lt;/dependency&gt;</code></pre></div>
+<p>定义一个静态方法根据传入的用户名和密码 和上面提到的盐（也就是代码中的<em><strong>sign</strong></em>）生成token</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span>  String <span class="hljs-title function_">make</span><span class="hljs-params">(String username, String password)</span>&#123;
+    <span class="hljs-keyword">return</span>    Jwts.builder()
+              <span class="hljs-comment">//header</span>
+              .setHeaderParam(<span class="hljs-string">&quot;typ&quot;</span>,<span class="hljs-string">&quot;JWT&quot;</span>)
+              .setHeaderParam(<span class="hljs-string">&quot;alg&quot;</span>,<span class="hljs-string">&quot;HS256&quot;</span>)
+                <span class="hljs-comment">//payload</span>
+              .claim(<span class="hljs-string">&quot;username&quot;</span>,username).claim(<span class="hljs-string">&quot;password&quot;</span>,password)
+              .setExpiration(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(System.currentTimeMillis()+<span class="hljs-number">1000</span>*<span class="hljs-number">15</span>))<span class="hljs-comment">//token过期时间15秒</span>
+              .setId(UUID.randomUUID().toString())<span class="hljs-comment">//id字段</span>
+                <span class="hljs-comment">//signatrue</span>
+              .signWith(SignatureAlgorithm.HS256,sign)<span class="hljs-comment">//设置加密算法以及使用加密的字符sign</span>
+              .compact();</code></pre></div>
 
-<p><img src="https://img1.imgtp.com/2023/06/02/3dQMrwip.png" srcset="/blog/img/loading.gif" lazyload alt="日志图片"><br>可以通过如下的exec命令进入Redis容器</p>
-<div class="code-wrapper"><pre><code class="hljs awk">docker exec -it myredis <span class="hljs-regexp">/bin/</span>bash</code></pre></div>
-<p>docker exec表示在运行的容器中执行命令，其中myredis参数表示在哪个容器(容器name)里执行命令。</p>
-<p>再使用命令redis-cli创建一个连接到redis服务器的客户端，客户端能对服务器发送命令请求如 set val 1、get val。</p>
+<p>检查token是否过期</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">chackDate</span><span class="hljs-params">(String token)</span>&#123;<span class="hljs-comment">//检测token是否有效</span>
+        <span class="hljs-keyword">if</span> (token==<span class="hljs-literal">null</span>||token==<span class="hljs-string">&quot;&quot;</span>)&#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        &#125;
+       <span class="hljs-keyword">try</span> &#123;
+           Jws&lt;Claims&gt; claimsJws = Jwts.parser().setSigningKey(sign).parseClaimsJws(token);
+       &#125;
+       <span class="hljs-keyword">catch</span> (Exception e)&#123;
+           e.printStackTrace();
+           <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+       &#125;   <span class="hljs-comment">//无异常说明没过期</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+
+    &#125;</code></pre></div>
+
+<p>解析token</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span>  <span class="hljs-keyword">void</span>  <span class="hljs-title function_">checkandparse</span><span class="hljs-params">(String token )</span>&#123;
+      <span class="hljs-comment">//解析</span>
+     Jws&lt;Claims&gt; claimsJws = Jwts.parser().setSigningKey(sign).parseClaimsJws(token);
+     JwsHeader claimsJwsHeader=claimsJws.getHeader();
+      System.out.println(claimsJwsHeader.getType());
+      System.out.println(claimsJwsHeader.getAlgorithm());
+     <span class="hljs-type">Claims</span> <span class="hljs-variable">claimsJwsBody</span> <span class="hljs-operator">=</span> claimsJws.getBody();
+      System.out.println(claimsJwsBody.get(<span class="hljs-string">&quot;username&quot;</span>));
+      System.out.println(claimsJwsBody.get(<span class="hljs-string">&quot;password&quot;</span>));
+      System.out.println(claimsJwsBody.getId());
+       System.out.println(claimsJwsBody.getExpiration());
+      System.out.println(claimsJws.getSignature());
+   &#125;</code></pre></div>
+
 
                 
               </div>
@@ -318,15 +379,6 @@
     </div>
   
   
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/blog/tags/Docker/">#Docker</a>
-      
-        <a href="/blog/tags/Redis/">#Redis</a>
-      
-    </div>
-  
 </div>
 
 
@@ -335,8 +387,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Docker上跑一个Redis</div>
-      <div>https://xinibb.github.io/blog/2023/05/31/让Redis在Docker跑/</div>
+      <div>Jwt</div>
+      <div>https://xinibb.github.io/blog/2023/06/12/Jwt/</div>
     </div>
     <div class="license-meta">
       
@@ -348,7 +400,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年5月31日</div>
+          <div>2023年6月12日</div>
         </div>
       
       
@@ -380,9 +432,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/blog/2023/06/09/ajax/" title="ajax">
+                      <a href="/blog/2023/06/21/Shell/" title="shell">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">ajax</span>
+                        <span class="hidden-mobile">shell</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -390,8 +442,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/blog/2023/05/29/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="设计模式">
-                        <span class="hidden-mobile">设计模式</span>
+                      <a href="/blog/2023/06/09/ajax/" title="ajax">
+                        <span class="hidden-mobile">ajax</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
